@@ -181,6 +181,9 @@ Open `http://localhost:5173`. The API is available at `http://localhost:8080`.
 - The frontend service module isolates API calls from the UI, making the UI easier to test and replace later.
 - The API uses a single `POST /calculate` endpoint with an `operation` field to keep the REST surface compact and easy to extend.
 
+<img width="1800" height="1017" alt="image" src="https://github.com/user-attachments/assets/cc455d81-0f5b-443d-906a-72f46acd886d" />
+<img width="432" height="955" alt="image" src="https://github.com/user-attachments/assets/a278f61e-5cef-4daa-8056-7f6a2b2a3ca8" />
+
 
 <img width="901" height="451" alt="image" src="https://github.com/user-attachments/assets/1ca8bd1d-691b-4e5e-b99b-cfe3b148b914" />
 <img width="801" height="493" alt="image" src="https://github.com/user-attachments/assets/4fd160fb-d460-40ac-b33b-04dc8c607c00" />
