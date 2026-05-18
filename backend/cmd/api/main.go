@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"net"
 	"net/http"
 	"os"
 
@@ -9,14 +10,18 @@ import (
 )
 
 func main() {
-	port := os.Getenv("PORT")
+	if err := run(os.Getenv, http.ListenAndServe); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func run(getenv func(string) string, listenAndServe func(string, http.Handler) error) error {
+	port := getenv("PORT")
 	if port == "" {
 		port = "8080"
 	}
 
 	server := httpapi.NewServer()
 	log.Printf("calculator API listening on :%s", port)
-	if err := http.ListenAndServe(":"+port, server); err != nil {
-		log.Fatal(err)
-	}
+	return listenAndServe(net.JoinHostPort("", port), server)
 }
