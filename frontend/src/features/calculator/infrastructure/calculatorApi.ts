@@ -1,4 +1,4 @@
-export type Operation = 'add' | 'subtract' | 'multiply' | 'divide' | 'power' | 'sqrt' | 'percent';
+import { Operation } from '../domain/operations';
 
 export type CalculatePayload = {
   operation: Operation;
@@ -6,14 +6,16 @@ export type CalculatePayload = {
   b?: number;
 };
 
-type CalculateResponse = {
+export type CalculateResponse = {
   operation: Operation;
   result: number;
 };
 
+export type CalculateGateway = (payload: CalculatePayload) => Promise<CalculateResponse>;
+
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080';
 
-export async function calculate(payload: CalculatePayload): Promise<CalculateResponse> {
+export const calculate: CalculateGateway = async (payload) => {
   const response = await fetch(`${API_BASE_URL}/calculate`, {
     method: 'POST',
     headers: {
@@ -28,4 +30,4 @@ export async function calculate(payload: CalculatePayload): Promise<CalculateRes
   }
 
   return data as CalculateResponse;
-}
+};
