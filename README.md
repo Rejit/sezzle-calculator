@@ -180,3 +180,9 @@ Open `http://localhost:5173`. The API is available at `http://localhost:8080`.
 - React state is kept local because the app is small and does not need a global state library.
 - The frontend service module isolates API calls from the UI, making the UI easier to test and replace later.
 - The API uses a single `POST /calculate` endpoint with an `operation` field to keep the REST surface compact and easy to extend.
+
+
+<img width="901" height="451" alt="image" src="https://github.com/user-attachments/assets/1ca8bd1d-691b-4e5e-b99b-cfe3b148b914" />
+<img width="801" height="493" alt="image" src="https://github.com/user-attachments/assets/4fd160fb-d460-40ac-b33b-04dc8c607c00" />
+<img width="1200" height="245" alt="image" src="https://github.com/user-attachments/assets/e09939dc-ffcc-48f3-81fd-874c1ce640a5" />
+
