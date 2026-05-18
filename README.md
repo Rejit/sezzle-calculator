@@ -1,51 +1,6 @@
 # Calculator
 
-## Objective
-Build a full-stack calculator application with a React frontend and a backend microservice. The frontend should consume the backend API to perform basic and advanced arithmetic operations. Focus on clean design, maintainable code, and testable architecture.
-
-## Requirements Functional
-
-### Operations:
-- Addition, Subtraction, Multiplication, Division
-- Optional: Exponentiation, Square Root, Percentage
-
-### Frontend (React):
-- Intuitive UI for entering input and displaying results
-- Input validation and error handling
-- Responsive design (basic mobile support)
-
-### Backend (REST API):
-- Expose endpoints for calculator operations
-- Validate input and handle edge cases (division by zero, invalid data)
-- Return results in JSON format
-
-### Non-Functional
-- Clean, readable, and idiomatic code (frontend and backend)
-- Unit tests covering key functionality for both layers
-- Documentation: setup instructions, API usage, and design rationale
-- Optional: Dockerfile for full-stack deployment
-
-### Constraints
-- Frontend: React (TypeScript preferred)
-- Backend: Go is perferred
-
-### Deliverables
-1. Git repository with frontend and backend code
-2. README with setup instructions, API examples, and design decisions
-3. Unit tests and coverage report
-4. Optional: Dockerfile to run frontend + backend together
-
-### Instructions
-1. Use any AI tooling you would like
-2. Spend ~2–4 hours on this assignment. Prioritize correctness, clarity, and maintainability over extra features.
-3. Push your solution to GitHub, GitLab, or another Git repository.
-4. Share the repository link with us for evaluation.
-5. Share any prompts that you used in your work
-6. Make sure your README includes:
-    - Setup instructions
-    - How to run the frontend and backend
-    - Examples of API calls (if using REST)
-    - Design decisions or assumptions
+A full-stack calculator application with a React + TypeScript frontend and a Go REST API backend. The frontend consumes the backend API for basic and advanced arithmetic operations with validation, error handling, responsive layout, and test coverage across layers.
 
 
 ## Project Structure
@@ -56,8 +11,11 @@ backend/
   internal/calculator/     Pure calculator domain logic
   internal/httpapi/        REST handlers and validation
 frontend/
-  src/App.tsx              Calculator UI
-  src/services/            API client
+  src/App.tsx                                      App composition root
+  src/features/calculator/application/            Calculator state and use-case orchestration
+  src/features/calculator/components/             Presentational React components
+  src/features/calculator/domain/                 Pure calculator UI/domain helpers
+  src/features/calculator/infrastructure/         REST API client
 ```
 
 ## Prerequisites
@@ -150,7 +108,22 @@ Backend:
 cd backend
 go test ./... -cover
 go test ./... -coverprofile=coverage.out
-go tool cover -html=coverage.out
+go tool cover -func=coverage.out
+go tool cover -html=coverage.out -o coverage.html
+open coverage.html
+```
+
+Current backend coverage:
+
+- Total statements: `95.8%`
+- `internal/calculator`: `100.0%`
+- `internal/httpapi`: `97.6%`
+
+If Go is not installed locally, run coverage with Docker from the repository root:
+
+```bash
+docker run --rm -v "$PWD":/app -w /app/backend golang:1.22 \
+  sh -c 'go test ./... -coverprofile=coverage.out && go tool cover -func=coverage.out && go tool cover -html=coverage.out -o coverage.html'
 ```
 
 Frontend:
@@ -159,9 +132,17 @@ Frontend:
 cd frontend
 npm install
 npm test
+open coverage/index.html
 ```
 
-Vitest writes an HTML coverage report to `frontend/coverage/`.
+Vitest writes an HTML coverage report to `frontend/coverage/` and enforces a minimum `90%` threshold for statements, branches, functions, and lines.
+
+Current frontend coverage:
+
+- Statements: `100%`
+- Branches: `93.22%`
+- Functions: `100%`
+- Lines: `100%`
 
 ## Docker
 
@@ -177,8 +158,6 @@ Open `http://localhost:5173`. The API is available at `http://localhost:8080`.
 
 - Calculator math lives in `backend/internal/calculator` as pure functions so it is easy to unit test without HTTP setup.
 - The HTTP layer handles JSON parsing, operand validation, edge cases, and consistent JSON responses.
-- React state is kept local because the app is small and does not need a global state library.
-- The frontend service module isolates API calls from the UI, making the UI easier to test and replace later.
 - The API uses a single `POST /calculate` endpoint with an `operation` field to keep the REST surface compact and easy to extend.
 
 <img width="1800" height="1017" alt="image" src="https://github.com/user-attachments/assets/cc455d81-0f5b-443d-906a-72f46acd886d" />
@@ -189,3 +168,15 @@ Open `http://localhost:5173`. The API is available at `http://localhost:8080`.
 <img width="801" height="493" alt="image" src="https://github.com/user-attachments/assets/4fd160fb-d460-40ac-b33b-04dc8c607c00" />
 <img width="1200" height="245" alt="image" src="https://github.com/user-attachments/assets/e09939dc-ffcc-48f3-81fd-874c1ce640a5" />
 
+- The frontend uses a feature-first Clean Architecture style:
+  - `domain` contains pure operation metadata, expression building, parsing, and formatting helpers.
+  - `application` contains the `useCalculator` hook that orchestrates state, validation, and the calculation use case.
+  - `infrastructure` contains the REST API adapter.
+  - `components` contains presentational UI pieces.
+- The UI is split into small components to keep responsibilities focused and make tests easier to reason about.
+- State remains local to the calculator feature because the app is intentionally small and does not need a global state library.
+
+## AI Prompts Used
+
+- "check coverage, need to reach 90% minimum"
+- "store components into the proper folder"
