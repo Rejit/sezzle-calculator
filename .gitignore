@@ -2,6 +2,7 @@
 
 # Go
 backend/coverage.out
+backend/coverage.html
 backend/bin/
 
 # Frontend
